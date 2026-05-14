@@ -1,0 +1,10 @@
+{
+  "home__title": {
+    "message": "Vite + Svelte",
+    "description": "Home page title."
+  },
+  "home__learn_more": {
+    "message": "Click on the Vite and Svelte logos to learn more",
+    "description": "Home page learn more link."
+  }
+}

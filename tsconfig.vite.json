@@ -1,0 +1,18 @@
+{
+  "extends": ["@tsconfig/node24/tsconfig.json", "./tsconfig.app.json"],
+  "compilerOptions": {
+    "types": ["chrome", "node", "vitest", "env.d.ts"]
+  },
+  "include": [
+    "vite.config.*",
+    "vitest.setup.ts",
+    "svelte.config.js",
+    ".eslintrc.cjs",
+    "README*md/*.ts",
+    "scripts/*",
+    "scripts/*.ts",
+    "scripts/**/*",
+    "scripts/**/*.ts",
+    "package.json"
+  ]
+}
