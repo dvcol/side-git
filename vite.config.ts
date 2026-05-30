@@ -199,7 +199,7 @@ export default defineConfig(({ mode }) => {
       globals: true,
       environment: 'jsdom',
       coverage: {
-        reportsDirectory: './coverage',
+        reportsDirectory: '../coverage',
       },
       setupFiles: ['../vitest.setup.ts'],
     },
