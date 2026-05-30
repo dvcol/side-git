@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: npm
-      url: https://www.npmjs.com/package/@dvcol/web-extension-template
+      url: https://www.npmjs.com/package/@dvcol/side-git
 
     steps:
       - name: ⛙ Checkout branch ${{ github.ref }}
@@ -81,11 +81,11 @@ jobs:
 
           # Zipping dist folder for artifact upload
           cd dist;
-          zip -r web-extension-template.zip *
+          zip -r side-git.zip *
 
           # Check zip created
           echo "Zip created in 'dist/'"
-          ls -l  web-extension-template.zip
+          ls -l  side-git.zip
           cd ..
 
       - name: 📝 Generate Release changelog
@@ -109,7 +109,7 @@ jobs:
         with:
           tag_name: ${{ inputs.tag-name || steps.latest-tag.outputs.TAG_NAME }}
           body_path: RELEASE.md
-          files: dist/web-extension-template.zip
+          files: dist/side-git.zip
 
       - name: 🚀 Publish to Chrome webstore
         env:
@@ -121,4 +121,4 @@ jobs:
           # =================  🚀 Publish to Chrome store  =================
 
           # Uploading zip to web store
-          npx -s chrome-webstore-upload-cli upload --source dist/web-extension-template.zip --extension-id "$CHROME_WEB_STORE_EXTENSION_ID" --client-id "$CHROME_WEB_STORE_CLIENT_ID" --client-secret "$CHROME_WEB_STORE_CLIENT_SECRET" --refresh-token "$CHROME_WEB_STORE_REFRESH_TOKEN"
+          npx -s chrome-webstore-upload-cli upload --source dist/side-git.zip --extension-id "$CHROME_WEB_STORE_EXTENSION_ID" --client-id "$CHROME_WEB_STORE_CLIENT_ID" --client-secret "$CHROME_WEB_STORE_CLIENT_SECRET" --refresh-token "$CHROME_WEB_STORE_REFRESH_TOKEN"

@@ -22,8 +22,8 @@ jobs:
     runs-on: ubuntu-latest
 
     environment:
-      name: web-extension-template
-      url: https://dvcol.github.io/web-extension-template/
+      name: side-git
+      url: https://dvcol.github.io/side-git/
 
     steps:
       - name: ⛙ Checkout branch ${{ github.ref }}

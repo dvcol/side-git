@@ -1,5 +1,5 @@
 {
-  "name": "@dvcol/web-extension-template",
+  "name": "@dvcol/side-git",
   "type": "module",
   "version": "1.8.0",
   "title": "Web Extension Template",
@@ -7,12 +7,12 @@
   "description": "Web Extension Template",
   "author": "dvcol",
   "license": "MIT",
-  "homepage": "https://github.com/dvcol/web-extension-template",
+  "homepage": "https://github.com/dvcol/side-git",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dvcol/web-extension-template.git"
+    "url": "https://github.com/dvcol/side-git.git"
   },
-  "bugs": "https://github.com/dvcol/web-extension-template/issues",
+  "bugs": "https://github.com/dvcol/side-git/issues",
   "main": "./build/lib/index.js",
   "types": "./build/lib/index.d.ts",
   "files": [
@@ -39,10 +39,10 @@
     "svelte:check": "svelte-check --tsconfig ./tsconfig.app.json --compiler-warnings \"css-unused-selector:ignore\"",
     "svelte:watch": "pnpm run svelte:check --watch",
     "dev": "cross-env NODE_ENV=development run-p dist vite:serve",
-    "dev:web": "VITE_SOURCEMAP=true VITE_WEB=true VITE_BASE=/web-extension-template/ run-s dev",
+    "dev:web": "VITE_SOURCEMAP=true VITE_WEB=true VITE_BASE=/side-git/ run-s dev",
     "build": "cross-env NODE_ENV=production run-s dist svelte:check 'vite:build {@}' --",
-    "build:web": "VITE_WEB=true VITE_BASE=/web-extension-template/ run-s build",
-    "serve:web": "VITE_SOURCEMAP=true VITE_WEB=true VITE_BASE=/web-extension-template/ run-s build vite:preview",
+    "build:web": "VITE_WEB=true VITE_BASE=/side-git/ run-s build",
+    "serve:web": "VITE_SOURCEMAP=true VITE_WEB=true VITE_BASE=/side-git/ run-s build vite:preview",
     "build:all": "run-p build build:web",
     "analyse": "VITE_DEVTOOLS=true pnpm run build",
     "test:unit": "vitest run --coverage --mode testing",

@@ -1,5 +1,5 @@
 export enum WebComponents {
-  WebExtensionTemplate = 'wc-web-extension-template',
+  WebExtensionTemplate = 'wc-side-git',
 }
 
 export interface DefineOptions {

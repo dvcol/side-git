@@ -103,7 +103,7 @@ function getPlugins(_isDev: boolean, _isWeb: boolean): PluginOption[] {
         outDir: resolveParent(`${outDir}/lib`),
       }),
       VitePWA({
-        scope: '/web-extension-template/',
+        scope: '/side-git/',
         registerType: 'autoUpdate',
         includeAssets: ['**/favicon.ico', '**/*.svg', '**/*.png', '**/*.webp', '**/*.json'],
         manifest: {
@@ -201,7 +201,7 @@ export default defineConfig(({ mode }) => {
       coverage: {
         reportsDirectory: './coverage',
       },
-      setupFiles: ['./vitest.setup.ts'],
+      setupFiles: ['../vitest.setup.ts'],
     },
     optimizeDeps: {
       exclude: ['path', 'fast-glob'],
