@@ -1,9 +1,21 @@
+minimumReleaseAge: 2880 # 3 days; 3 × 24 × 60 = 4320
+
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true
 
+overrides:
+  '@trickfilm400/rollup-plugin-off-main-thread': 4.0.0-pre1 # 3.x prereleases unattested
+  ast-v8-to-istanbul: 1.0.0
+  chokidar: 5.0.0 # 4.0.3 dropped provenance; remove override once a later 4.x publishes with attestation
+  semver: ^7.8.1 # transitive 5.x/6.x ranges have no trusted publisher; collapse to modern semver
+  stylelint-config-rational-order>stylelint: ^17.12.0 # stylelint-config-rational-order@0.1.2 ships stylelint as a runtime dep (bug); collapse the phantom subtree onto modern stylelint
+  tinyexec: 1.1.2 # remove when 1.2.3 is past minimumReleaseAge
+
 ignoredBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
-
-minimumReleaseAge: 10080 # 7 days ; 7 × 24 × 60 = 10080.
