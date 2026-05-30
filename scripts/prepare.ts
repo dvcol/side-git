@@ -57,7 +57,9 @@ async function prepare(hmr = isDev) {
     console.info('Watching changes ...');
 
     copyViews().catch(e => console.error('Failed to copy html', e));
-    watch(resolveParent('src/**/*.html')).on('change', () => {
+    watch(resolveParent('src'), {
+      ignored: (p, stats) => !!stats?.isFile() && !p.endsWith('.html'),
+    }).on('change', () => {
       copyViews().catch(e => console.error('Failed to copy html', e));
     });
 
@@ -66,7 +68,9 @@ async function prepare(hmr = isDev) {
     });
 
     exec('vite build');
-    watch(resolveParent('src/script/**/*.ts')).on('change', () => {
+    watch(resolveParent('src/scripts'), {
+      ignored: (p, stats) => !!stats?.isFile() && !p.endsWith('.ts'),
+    }).on('change', () => {
       try {
         exec('vite build');
       } catch (e) {
@@ -74,7 +78,9 @@ async function prepare(hmr = isDev) {
       }
     });
 
-    watch([resolveParent('src/i18n/en/**/*.json')]).on('change', () => {
+    watch(resolveParent('src/i18n/en'), {
+      ignored: (p, stats) => !!stats?.isFile() && !p.endsWith('.json'),
+    }).on('change', () => {
       mergeJson({
         pattern: 'src/i18n/en/**/*.json',
         output: `${outDir}/_locales/en/messages.json`,
