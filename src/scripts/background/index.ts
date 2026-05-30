@@ -1,4 +1,5 @@
 import { onVersionUpdate } from '@dvcol/web-extension-utils/chrome/runtime';
+import { setPanelBehavior } from '@dvcol/web-extension-utils/chrome/side-panel';
 
 import { MessageType } from '~/models/message.model';
 import { Logger } from '~/services/logger.service';
@@ -14,3 +15,7 @@ try {
 } catch (error) {
   Logger.error('Failed to handle version update', error);
 }
+
+setPanelBehavior?.({ openPanelOnActionClick: true }).catch((error) => {
+  Logger.error('Failed to set panel behavior', error);
+});

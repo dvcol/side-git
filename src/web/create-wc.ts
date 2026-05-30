@@ -11,7 +11,7 @@ export function createWc(options: CreateOptions) {
     async connectedCallback() {
       const shadowRoot = this.attachShadow({ mode: 'closed' });
 
-      return mount(App, { target: shadowRoot, props: options });
+      return mount(App, { target: shadowRoot, props: { root: shadowRoot, ...options } });
     }
   }
   return AppWc;

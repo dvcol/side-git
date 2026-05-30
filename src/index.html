@@ -113,15 +113,25 @@
 </html>
 
 <style>
+  html {
+    overflow: hidden;
+    scrollbar-width: none;
+    background-color: #e7e7ee;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html {
+      background-color: #202123;
+    }
+  }
+
   html,
   body {
     overscroll-behavior: none;
     display: flex;
     flex-direction: column;
     margin: 0;
-    color: rgb(235 235 235 / 64%);
     font-size: 1rem;
-    background: #2b2b2a;
   }
 
   wc-side-git {
@@ -147,12 +157,10 @@
   #app-skeleton-navbar {
     width: 100%;
     height: var(--skeleton-navbar-height, 2.75rem);
-    background: rgb(0 0 0 / 30%);
     backdrop-filter: blur(1px);
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      background: rgb(0 0 0 / 60%);
       backdrop-filter: blur(20px);
     }
   }
