@@ -14,7 +14,10 @@ import pkg from './package.json';
 import { isDev, outDir, port, resolveParent, sourcemap } from './scripts/utils';
 
 function getInput(hmr: boolean, _isWeb: boolean): Record<string, string> {
-  if (hmr) return { background: resolveParent('src/scripts/background/index.ts') };
+  if (hmr) return {
+    background: resolveParent('src/scripts/background/index.ts'),
+    content: resolveParent('src/scripts/content/index.ts'),
+  };
 
   if (_isWeb) return {
     web: resolveParent('src/index.html'),
@@ -23,6 +26,7 @@ function getInput(hmr: boolean, _isWeb: boolean): Record<string, string> {
   };
   return {
     background: resolveParent('src/scripts/background/index.ts'),
+    content: resolveParent('src/scripts/content/index.ts'),
     options: resolveParent('src/views/options/index.html'),
     popup: resolveParent('src/views/popup/index.html'),
     panel: resolveParent('src/views/panel/index.html'),
@@ -87,9 +91,11 @@ function getPlugins(_isDev: boolean, _isWeb: boolean): PluginOption[] {
       apply: 'serve',
       handleHotUpdate: async ({ file, server: { config } }) => {
         const srcDir = dirname(file);
-        if (!srcDir?.endsWith('src/scripts/background')) return;
-        const outPath = `${join(config.build.outDir, 'scripts/background')}.js`;
-        await writeFile(outPath, `import 'http://localhost:3303/scripts/background/index.ts';`);
+        const match = srcDir?.match(/src\/scripts\/([^/]+)$/);
+        if (!match) return;
+        const [, name] = match;
+        const outPath = `${join(config.build.outDir, `scripts/${name}`)}.js`;
+        await writeFile(outPath, `import 'http://localhost:3303/scripts/${name}/index.ts';`);
       },
     },
   ];
@@ -183,6 +189,7 @@ export default defineConfig(({ mode }) => {
           chunkFileNames: 'chunks/[name]-[hash].chunk.js',
           entryFileNames: (entry) => {
             if (entry.name === 'background') return 'scripts/[name].js';
+            if (entry.name === 'content') return 'scripts/[name].js';
             if (entry.name === 'entry') return 'entry/index.js';
             if (entry.name === 'lib') return 'lib/index.js';
             return 'scripts/[name]-[hash].js';

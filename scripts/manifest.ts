@@ -51,6 +51,20 @@ export const manifest: WebManifest = {
     service_worker: 'scripts/background.js',
     type: 'module',
   },
+  content_scripts: [
+    {
+      matches: [
+        'https://github.com/*',
+        'https://*.github.com/*',
+        'https://*.githubusercontent.com/*',
+        'https://*.githubassets.com/*',
+        // github action logs
+        'https://productionresultssa13.blob.core.windows.net/actions-results/*',
+      ],
+      js: ['scripts/content.js'],
+      run_at: 'document_idle',
+    },
+  ],
   permissions: ['storage', 'tabs', 'contextMenus', 'sidePanel'],
   web_accessible_resources: [],
   host_permissions: getHostPermissions(isDev, port),
