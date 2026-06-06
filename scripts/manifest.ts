@@ -31,9 +31,10 @@ export const manifest: WebManifest = {
   description: pkg.description,
   default_locale: 'en',
   icons: {
-    16: 'icons/icon-512.png',
-    48: 'icons/icon-512.png',
-    128: 'icons/icon-512.png',
+    16: 'icons/icon-16.png',
+    32: 'icons/icon-32.png',
+    48: 'icons/icon-48.png',
+    128: 'icons/icon-128.png',
   },
   options_ui: {
     page: 'views/options/index.html',
@@ -41,7 +42,10 @@ export const manifest: WebManifest = {
   },
   action: {
     default_title: pkg.title || pkg.name,
-    default_icon: 'icons/icon-512.png',
+    default_icon: {
+      16: 'icons/icon-16.png',
+      32: 'icons/icon-32.png',
+    },
     default_popup: 'views/popup/index.html',
   },
   side_panel: {

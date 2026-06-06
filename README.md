@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to <i>Web Extension Template</i></h1>
+<h1 align="center">Welcome to <i>Side Git</i></h1>
 <p>
   <img src="https://img.shields.io/badge/pnpm-%3E%3D7.0.0-blue.svg" alt="pnpm version" />
   <img src="https://img.shields.io/badge/node-%3E%3D17.0.0-blue.svg" alt="node version"/>
@@ -16,7 +16,7 @@
   </a>
 </p>
 
-> <Web Extension Template> description here
+> <Side Git> A browser extension side panel for GitHub
 
 ## Prerequisites
 
