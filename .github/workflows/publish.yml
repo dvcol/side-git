@@ -74,19 +74,7 @@ jobs:
         uses: ./.github/actions/build
         with:
           script: build
-
-      - name: 🗃️ Zip build folder
-        run: |
-          # =================  🗃️ Zipping build folder  =================
-
-          # Zipping dist folder for artifact upload
-          cd dist;
-          zip -r side-git.zip *
-
-          # Check zip created
-          echo "Zip created in 'dist/'"
-          ls -l  side-git.zip
-          cd ..
+          zip: true
 
       - name: 📝 Generate Release changelog
         run: |

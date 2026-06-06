@@ -51,7 +51,7 @@
     "lint:fix": "pnpm run lint --fix",
     "style": "stylelint '**/*.{svelte,css,scss,less,html}' --go '{\"gitignore\":true}'",
     "style:fix": "pnpm run style --fix",
-    "release": "standard-version",
+    "release": "commit-and-tag-version",
     "release:changelog": "extract-changelog-release > RELEASE.md"
   },
   "dependencies": {

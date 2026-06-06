@@ -1,8 +1,10 @@
 import type { PluginOption } from 'vite';
 
+import { execFile } from 'node:child_process';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
+import { promisify } from 'node:util';
 
 import { svelte, vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig, loadEnv } from 'vite';
@@ -12,6 +14,8 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 import pkg from './package.json';
 import { isDev, outDir, port, resolveParent, sourcemap } from './scripts/utils';
+
+const execFileAsync = promisify(execFile);
 
 function getInput(hmr: boolean, _isWeb: boolean): Record<string, string> {
   if (hmr) return {
@@ -33,12 +37,19 @@ function getInput(hmr: boolean, _isWeb: boolean): Record<string, string> {
   };
 }
 
+const scriptDirRegex = /src\/scripts\/([^/]+)$/;
+function getScriptName(srcDir: string) {
+  const match = srcDir?.match(scriptDirRegex);
+  if (!match) return;
+  return match[1];
+}
+
 const i18nRegex = /.*src\/i18n\/([a-zA-Z]+)\/.*\.json/;
 const slashRegex = /\\/g;
 const htmlRegex = /"\/assets\//g;
 
 type JsonLocale = Record<string, string>;
-function getPlugins(_isDev: boolean, _isWeb: boolean): PluginOption[] {
+function getPlugins(_isDev: boolean, _isWeb: boolean, _zip: boolean): PluginOption[] {
   const plugins: PluginOption[] = [
     svelte({
       preprocess: vitePreprocess(),
@@ -90,10 +101,8 @@ function getPlugins(_isDev: boolean, _isWeb: boolean): PluginOption[] {
       name: 'write-to-disk',
       apply: 'serve',
       handleHotUpdate: async ({ file, server: { config } }) => {
-        const srcDir = dirname(file);
-        const match = srcDir?.match(/src\/scripts\/([^/]+)$/);
-        if (!match) return;
-        const [, name] = match;
+        const name = getScriptName(dirname(file));
+        if (!name) return;
         const outPath = `${join(config.build.outDir, `scripts/${name}`)}.js`;
         await writeFile(outPath, `import 'http://localhost:3303/scripts/${name}/index.ts';`);
       },
@@ -106,7 +115,7 @@ function getPlugins(_isDev: boolean, _isWeb: boolean): PluginOption[] {
         tsconfigPath: resolveParent('tsconfig.app.json'),
         include: ['index.ts', 'web/define-component.ts'],
         entryRoot: resolveParent('src'),
-        outDir: resolveParent(`${outDir}/lib`),
+        outDirs: resolveParent(`${outDir}/lib`),
       }),
       VitePWA({
         scope: '/side-git/',
@@ -114,7 +123,7 @@ function getPlugins(_isDev: boolean, _isWeb: boolean): PluginOption[] {
         includeAssets: ['**/favicon.ico', '**/*.svg', '**/*.png', '**/*.webp', '**/*.json'],
         manifest: {
           name: pkg.title || pkg.name,
-          short_name: 'Web Extension Template',
+          short_name: 'Side Git',
           description: pkg.description,
           theme_color: '#ff3c00',
           background_color: '#ffffff',
@@ -135,13 +144,35 @@ function getPlugins(_isDev: boolean, _isWeb: boolean): PluginOption[] {
     );
   }
 
+  // Zip the built extension (manifest at the archive root) for store upload.
+  // Toggled by VITE_ZIP so regular dev/web builds are unaffected. Shells out to
+  // the native `zip` with the child `cwd` set to the output dir — no shell `cd`,
+  // paths resolved absolutely, `.` keeps dotfiles and `-x` skips a stale archive.
+  if (_zip && !_isWeb) {
+    plugins.push({
+      name: 'zip-dist',
+      apply: 'build',
+      closeBundle: {
+        order: 'post',
+        sequential: true,
+        handler: async () => {
+          const dir = resolveParent(outDir);
+          const name = `${pkg.name.split('/').pop()}.zip`;
+          await execFileAsync('zip', ['-r', name, '.', '-x', name], { cwd: dir });
+          console.info(`Zipped extension build to '${dir}/${name}'`);
+        },
+      },
+    });
+  }
+
   return plugins;
 }
 
 export default defineConfig(({ mode }) => {
   const env: NodeJS.Process['env'] = { ...process.env, ...loadEnv(mode, process.cwd()) };
-  const isWeb: boolean = env.VITE_WEB ?? false;
-  const sourcemap: boolean = env.VITE_SOURCEMAP ?? false;
+  const isWeb: boolean = env.VITE_WEB === 'true';
+  const sourcemap: boolean = env.VITE_SOURCEMAP === 'true';
+  const zip: boolean = env.VITE_ZIP === 'true';
   return {
     root: resolveParent('src'),
     envDir: resolveParent('env'),
@@ -161,7 +192,7 @@ export default defineConfig(({ mode }) => {
     devtools: {
       enabled: process.env.VITE_DEVTOOLS === 'true',
     },
-    plugins: getPlugins(isDev, isWeb),
+    plugins: getPlugins(isDev, isWeb, zip),
     base: env.VITE_BASE ?? './',
     server: {
       port,

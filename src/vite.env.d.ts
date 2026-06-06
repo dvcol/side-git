@@ -14,7 +14,8 @@ interface ImportMetaEnv extends ImportMetaEnv {
   VITE_BASE?: string;
   VITE_WEB?: boolean;
   VITE_SOURCEMAP?: boolean;
-};
+  VITE_ZIP?: boolean;
+}
 
 interface ImportMeta {
   readonly env: ImportMetaEnv;

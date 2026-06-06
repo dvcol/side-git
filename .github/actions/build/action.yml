@@ -6,6 +6,11 @@ inputs:
     description: Build script
     default: build
 
+  zip:
+    description: Zip the built extension (dist) for store upload
+    required: false
+    default: 'false'
+
   node_version:
     description: Pnpm version to use
     required: true
@@ -25,6 +30,8 @@ runs:
 
     - name: 🚧 Build sources
       shell: bash
+      env:
+        VITE_ZIP: ${{ inputs.zip }}
       run: |
         # =================  🚧 Build  =================
         pnpm run ${{ inputs.script }}
