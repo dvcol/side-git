@@ -2,7 +2,7 @@
   import { RouterView } from '@dvcol/svelte-simple-router/components';
   import { transition } from '@dvcol/svelte-simple-router/utils';
 
-  import svelteLogo from '~/assets/logo.svg';
+  import logo from '~/assets/logo.svg';
   import { router } from '~/router/router';
   import { useI18n } from '~/utils/i18n.utils';
 
@@ -11,8 +11,8 @@
 
 <main>
   <div>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
+    <a href="https://github.com/dvcol/side-git" target="_blank" rel="noreferrer">
+      <img src={logo} class="logo" alt="Side Git" />
     </a>
   </div>
   <h1>{i18n('title')}</h1>
@@ -41,7 +41,7 @@
   }
 
   .logo {
-    height: 6em;
+    height: 20em;
     padding: 1.5em;
     transition: filter 300ms;
     will-change: filter;
@@ -54,10 +54,6 @@
 
   .logo:hover {
     filter: drop-shadow(0 0 2em #646cffaa);
-  }
-
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
   }
 
   .read-the-docs {

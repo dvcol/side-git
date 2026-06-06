@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" fill="none" role="img" aria-label="Side Git">
+  <title>Side Git</title>
+
+  <!-- ============================================================
+       "Plated" variant for small sizes (16/32px toolbar + favicon).
+       Same hero composition, but on a white squircle plate so the
+       dark-ink art stands out on a dark toolbar.
+
+       Two deliberate differences from the hero:
+       1. NO white keylines on the cat/panel — the white plate already
+          provides contrast, and white keylines would read as a gap/
+          moat between the (dark) cat and (dark) panel on the (white)
+          plate. So the art is solid ink and reads as one cohesive group.
+       2. The art is fitted so its full visible width (whisker tips on the
+          left → panel edge on the right) spans the plate edge-to-edge:
+          the whiskers bleed to the left edge instead of floating inside it
+          (which read as left padding), and the panel sits near the right
+          edge — balanced, with nothing clipped.
+       ============================================================ -->
+
+  <defs>
+    <!-- clip = the plate's inner shape (corner safety only — at this fit
+         nothing actually reaches the edge to be cut) -->
+    <clipPath id="sg-plate">
+      <rect x="2" y="2" width="124" height="124" rx="28" />
+    </clipPath>
+  </defs>
+
+  <!-- Squircle plate -->
+  <rect x="2" y="2" width="124" height="124" rx="28" fill="#f0f6fc" stroke="#24292f" stroke-width="2.5" />
+
+  <g clip-path="url(#sg-plate)">
+    <g transform="translate(1 -3) scale(1.05)">
+      <!-- Octocat (real GitHub vector; pool removed). Solid ink, no keyline. -->
+      <g transform="rotate(-15 53 64)" stroke-linejoin="round">
+        <g transform="translate(4 26) scale(0.40)">
+          <path
+            fill="#24292f"
+            d="M255.8 95.6l.2-.9c-21.1-4.2-42.7-4.3-55.8-3.7 2.1-7.7 2.8-16.7 2.8-26.6 0-14.3-5.4-25.7-14-34.3 1.5-4.9 3.5-15.8-2-29.7 0 0-9.8-3.1-32.1 11.8-8.7-2.2-18-3.3-27.3-3.3-10.2 0-20.5 1.3-30.2 3.9C74.4-2.9 64.3.3 64.3.3c-6.6 16.5-2.5 28.8-1.3 31.8-7.8 8.4-12.5 19.1-12.5 32.2 0 9.9 1.1 18.8 3.9 26.5-13.2-.5-34-.3-54.4 3.8l.2.9c20.4-4.1 41.4-4.2 54.5-3.7.6 1.6 1.3 3.2 2 4.7-13 .4-35.1 2.1-56.3 8.1l.3.9c21.4-6 43.7-7.6 56.6-8 7.8 14.4 23 23.8 50.2 26.7-3.9 2.6-7.8 7-9.4 14.5-5.3 2.5-21.9 8.7-31.9-8.5 0 0-5.6-10.2-16.3-11 0 0-10.4-.2-.7 6.5 0 0 6.9 3.3 11.7 15.6 0 0 6.3 21 36.4 14.2V177s-.6 7.7-7.7 10.2c0 0-4.2 2.9.3 4.5 0 0 19.5 1.6 19.5-14.4v-23.6s-.8-9.4 3.8-12.6v38.8s-.3 9.3-5.1 12.8c0 0-3.2 5.7 3.8 4.2 0 0 13.4-1.9 14-17.6l.3-39.3h3.2l.3 39.3c.6 15.6 14 17.6 14 17.6 7 1.6 3.8-4.2 3.8-4.2-4.8-3.5-5.1-12.8-5.1-12.8v-38.5c4.6 3.6 3.8 12.3 3.8 12.3v23.6c0 16 19.5 14.4 19.5 14.4 4.5-1.6.3-4.5.3-4.5-7-2.6-7.7-10.2-7.7-10.2v-31c0-12.1-5.1-18.5-10.1-21.8 29-2.9 42.9-12.2 49.3-26.8 12.7.3 35.6 1.9 57.4 8.1l.3-.9c-21.7-6.1-44.4-7.7-57.3-8.1.6-1.5 1.1-3 1.6-4.6 13.4-.5 35.1-.5 56.3 3.7z"
+          />
+          <path
+            fill="#f0f6fc"
+            d="M174.6 63.7c6.2 5.7 9.9 12.5 9.9 19.8 0 34.4-25.6 35.3-57.2 35.3S70.1 114 70.1 83.5c0-7.3 3.6-14.1 9.8-19.7 10.3-9.4 27.7-4.4 47.4-4.4s37-5.1 47.3 4.3z"
+          />
+          <path
+            fill="#24292f"
+            d="M104.5 85.5c0 6.3-3.6 11.4-7.9 11.4-4.4 0-7.9-5.1-7.9-11.4 0-6.3 3.6-11.4 7.9-11.4 4.3 0 7.9 5.1 7.9 11.4zm63.8 0c0 6.3-3.6 11.4-7.9 11.4-4.4 0-7.9-5.1-7.9-11.4 0-6.3 3.6-11.4 7.9-11.4 4.4 0 7.9 5.1 7.9 11.4zm-37.8 15c0 1.6-1.3 3-3 3-1.6 0-3-1.3-3-3s1.3-3 3-3c1.6 0 3 1.3 3 3zm-9.9 7.5c-.2-.5.1-1 .6-1.2.5-.2 1 .1 1.2.6.8 2.2 2.8 3.6 5.1 3.6s4.3-1.5 5.1-3.6c.2-.5.7-.8 1.2-.6.5.2.8.7.6 1.2-1 2.9-3.8 4.9-6.9 4.9-3.1 0-5.9-2-6.9-4.9z"
+          />
+          <path
+            fill="#f0f6fc"
+            d="M54.5 121.6c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2 0 2.1.6 2.1 1.4zm5.8 3.2c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2 0 2.1.6 2.1 1.4zm3.5 4.2c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2-.1 2.1.6 2.1 1.4zm3.2 4.8c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2-.1 2.1.6 2.1 1.4zm3.5 4.4c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2 0 2.1.6 2.1 1.4zm4.8 3.9c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2-.1 2.1.6 2.1 1.4zm6.7 2.5c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2 0 2.1.6 2.1 1.4zm6.7 0c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2 0 2.1.6 2.1 1.4zm6.8-1.1c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.1 0 2.1.6 2.1 1.4z"
+          />
+        </g>
+      </g>
+
+      <!-- Side panel — ink fill + off-white border (matches the hero; the
+           border defines the panel edge against the cat without the white
+           reading as a gap, because the cat tucks behind it). -->
+      <rect x="72" y="17" width="42" height="94" rx="9" fill="#24292f" stroke="#f0f6fc" stroke-width="3" />
+
+      <!-- PR diff rows -->
+      <g stroke-linecap="round">
+        <rect x="87" y="25.5" width="16" height="5" rx="2.5" fill="#768390" />
+        <rect x="78" y="38.75" width="6" height="2.5" rx="1.25" fill="#f85149" />
+        <rect x="87" y="37.5" width="14" height="5" rx="2.5" fill="#f85149" />
+        <rect x="78" y="50.75" width="6" height="2.5" rx="1.25" fill="#3fb950" />
+        <rect x="79.75" y="49" width="2.5" height="6" rx="1.25" fill="#3fb950" />
+        <rect x="87" y="49.5" width="19" height="5" rx="2.5" fill="#3fb950" />
+        <rect x="78" y="62.75" width="6" height="2.5" rx="1.25" fill="#3fb950" />
+        <rect x="79.75" y="61" width="2.5" height="6" rx="1.25" fill="#3fb950" />
+        <rect x="87" y="61.5" width="13" height="5" rx="2.5" fill="#3fb950" />
+        <rect x="87" y="73.5" width="15" height="5" rx="2.5" fill="#768390" />
+        <rect x="78" y="86.75" width="6" height="2.5" rx="1.25" fill="#f85149" />
+        <rect x="87" y="85.5" width="16" height="5" rx="2.5" fill="#f85149" />
+        <rect x="78" y="98.75" width="6" height="2.5" rx="1.25" fill="#3fb950" />
+        <rect x="79.75" y="97" width="2.5" height="6" rx="1.25" fill="#3fb950" />
+        <rect x="87" y="97.5" width="12" height="5" rx="2.5" fill="#3fb950" />
+      </g>
+    </g>
+  </g>
+</svg>
