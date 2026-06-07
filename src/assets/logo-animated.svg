@@ -1,0 +1,296 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="-10 -10 148 148" fill="none" role="img" aria-label="Side Git">
+  <title>Side Git</title>
+
+  <!-- ============================================================
+       Animated variant of logo.svg.
+
+       Two CSS animations share one 6s timeline so they never overlap
+       (off-cycle): blink → long pause → tilt (peek) → long pause → loop.
+         · blink  (0.00s–0.36s): the two pupils collapse vertically to
+           their own centre, revealing the white face behind them, then
+           reopen — a vertical blink.
+         · tilt   (≈2.5s–5.2s): the whole cat swings like a pendulum from
+           a pivot BELOW it, so the motion is horizontal — it tilts right
+           AND slides right, ducking further behind the panel (hide), HOLDS
+           there a beat, then swings + slides left, leaning back out past
+           the panel's edge (peek), holds, then settles. The small
+           translateX exaggerates the hide/peek beyond what the rotation
+           alone gives; a right-edge clip masks anything that slides past
+           the panel during the hide. Pauses (≈2.5s and ≈0.8s) are both
+           longer than the blink, per the requested rhythm.
+
+       prefers-reduced-motion freezes both to their resting state.
+       ============================================================ -->
+  <style>
+    /* The cat shares ONE long 16s period with a LOT of idle. All the action
+       (blink, then the hide/peek swing) happens in the first ~40% of the
+       cycle; the remaining ~60% (~9-10s) is dead-still resting, so the cat
+       sits quietly far longer than it moves — peeking out only occasionally. */
+
+    /* Collapse vertically about each pupil's own bounding box -> white shows */
+    .blink {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: blink 16s ease-in-out infinite;
+    }
+
+    /* Swing the whole cat about a pivot BELOW it, so it tilts side-to-side
+       (toward the panel = hide, away = peek) like a pendulum, not vertically.
+       transform-box: view-box measures the origin from the viewBox's
+       top-left corner (now -10,-10), so the pivot point (53,122) in art
+       space is written as (53+10, 122+10) = (63,132). */
+    .tilt {
+      transform-box: view-box;
+      transform-origin: 63px 132px;
+      animation: tilt 16s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%   { transform: scaleY(1); }
+      2%   { transform: scaleY(0.08); }   /* quick blink near the start... */
+      4%   { transform: scaleY(1); }
+      100% { transform: scaleY(1); }      /* ...then eyes open for the whole long idle */
+    }
+
+    @keyframes tilt {
+      0%,
+      8%   { transform: translateX(0) rotate(0deg); }      /* resting, settled after the blink */
+      15%  { transform: translateX(15px) rotate(7deg); }   /* swing + slide right: tuck further behind the panel (hide) */
+      24%  { transform: translateX(15px) rotate(7deg); }   /* hold behind the panel — beat before peeking out */
+      31%  { transform: translateX(-3px) rotate(-3deg); }  /* swing + slide left: lean back out past the edge (peek) */
+      35%  { transform: translateX(-3px) rotate(-3deg); }  /* hold the peek */
+      40%,
+      100% { transform: translateX(0) rotate(0deg); }      /* settle, then a long idle before the next cycle */
+    }
+
+    /* Diff content bars sit at FULL width at rest (a settled line of code) and
+       briefly dip narrow — like a quick edit — before returning to full. ALL
+       lines share ONE repeat period (--dur, set the same on every line) so the
+       panel falls idle together: a short burst of edits near the start, then a
+       LONG frozen idle (~75% of the cycle) where every line rests at full width
+       — the natural state, not the odd half-erased look. Per-line --delay +
+       --min/--max keep the burst independent (staggered, varied dip depth); the
+       small delays still leave a long window where ALL lines overlap in idle. */
+    .diff-line {
+      transform-box: fill-box;
+      transform-origin: left center;
+      animation: diff-pulse var(--dur, 9s) ease-in-out var(--delay, 0s) infinite;
+    }
+
+    @keyframes diff-pulse {
+      0%        { transform: scaleX(var(--max, 1)); }     /* full — resting line */
+      8%        { transform: scaleX(var(--min, 0.5)); }   /* quick dip narrow — the edit */
+      22%, 100% { transform: scaleX(var(--max, 1)); }     /* back to full, then long frozen idle */
+    }
+
+    /* Sign-cycling lines: the bar churns through the three diff states —
+       added (green +) -> removed (red −) -> context (grey, no sign). The bar
+       still pulses width (diff-pulse); sign-fill recolours it in sync. The
+       gutter dash recolours + hides for context (sign-dash) and the + stem
+       fades out for non-added states (sign-stem). All four share the line's
+       --dur/--delay (inherited from the wrapping group) so they switch together. */
+    .sign {
+      animation:
+        diff-pulse var(--dur, 9s) ease-in-out var(--delay, 0s) infinite,
+        sign-fill var(--dur, 9s) ease-in-out var(--delay, 0s) infinite;
+    }
+    .sign-dash { animation: sign-dash var(--dur, 9s) ease-in-out var(--delay, 0s) infinite; }
+    .sign-stem { animation: sign-stem var(--dur, 9s) ease-in-out var(--delay, 0s) infinite; }
+
+    /* Sign churn happens during the active burst (settles by ~20%), then
+       freezes for the long idle — the line rests on its new state (grey
+       context) and holds, so the freeze is a TRUE freeze (no colour drift
+       while width is still). */
+    @keyframes sign-fill {
+      0%,   6%  { fill: #3fb950; }       /* added (green +) */
+      11%, 15%  { fill: #f85149; }       /* removed (red −) */
+      20%, 100% { fill: #768390; }       /* context (grey) — held through idle */
+    }
+
+    @keyframes sign-dash {
+      0%,   6%  { opacity: 1; fill: #3fb950; }   /* green − stroke of the + */
+      11%, 15%  { opacity: 1; fill: #f85149; }   /* red − */
+      20%, 100% { opacity: 0; fill: #768390; }   /* context: gutter sign gone, held */
+    }
+
+    @keyframes sign-stem {
+      0%,   6%  { opacity: 1; }   /* vertical stroke of the + (added only) */
+      11%, 100% { opacity: 0; }   /* gone for removed + context, held through idle */
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .blink,
+      .tilt,
+      .diff-line,
+      .sign,
+      .sign-dash,
+      .sign-stem { animation: none; }
+    }
+  </style>
+
+  <!-- Right-edge clip: defined in viewBox space and applied on the STATIC
+       wrapper below (NOT on .tilt), so it stays fixed at the panel's right
+       outer edge (x=115.5) while the cat moves. Any whisker/tentacle that
+       swings or slides past the panel during the hide is masked, exactly as
+       if it were still tucked behind the panel. -->
+  <defs>
+    <clipPath id="panel-right-clip">
+      <!-- Left edge at -10 (covers the padded viewBox so the leftward peek
+           is NOT clipped); right edge fixed at the panel's outer edge
+           (x=115.5) so only the hide-side overflow is masked. -->
+      <rect x="-10" y="-10" width="125.5" height="148" />
+    </clipPath>
+  </defs>
+
+  <!-- Static clip wrapper (no transform → clip stays put) -->
+  <g clip-path="url(#panel-right-clip)">
+    <!-- Tilt wrapper: swings the cat about a pivot below it (53,122) -->
+    <g class="tilt">
+      <!-- ========================================================
+         Octocat — the real GitHub vector (viewBox 256x259.3), with the
+         reflecting pool / water bits removed, recoloured to the GitHub
+         ink palette and given a thin white keyline so it survives on a
+         dark toolbar. Scaled + tilted to peek out from behind the panel;
+         its right side (whiskers + tentacles) tucks behind it.
+
+         Keyline technique: the body path is drawn TWICE — first with
+         fill + white stroke, then fill-only on top. The white stroke
+         therefore only shows OUTSIDE the silhouette, so the thin whiskers
+         keep a visible dark core on light backgrounds and the tentacles
+         render at full thickness.
+         ======================================================== -->
+      <g transform="rotate(-15 53 64)" stroke-linejoin="round">
+        <g transform="translate(4 26) scale(0.40)">
+          <!-- Body silhouette (head + ears + whiskers + tentacles) — keyline pass.
+             Scaling stroke (so it tracks the art across the whole size suite).
+             The fill-only pass below covers the inner half, so the visible
+             keyline ≈ half this width: 7.5 × scale(0.40) = 3 → ~1.5 units
+             visible ≈ half the panel's 3-unit border. -->
+          <path
+            fill="#24292f"
+            stroke="#f0f6fc"
+            stroke-width="7.5"
+            d="M255.8 95.6l.2-.9c-21.1-4.2-42.7-4.3-55.8-3.7 2.1-7.7 2.8-16.7 2.8-26.6 0-14.3-5.4-25.7-14-34.3 1.5-4.9 3.5-15.8-2-29.7 0 0-9.8-3.1-32.1 11.8-8.7-2.2-18-3.3-27.3-3.3-10.2 0-20.5 1.3-30.2 3.9C74.4-2.9 64.3.3 64.3.3c-6.6 16.5-2.5 28.8-1.3 31.8-7.8 8.4-12.5 19.1-12.5 32.2 0 9.9 1.1 18.8 3.9 26.5-13.2-.5-34-.3-54.4 3.8l.2.9c20.4-4.1 41.4-4.2 54.5-3.7.6 1.6 1.3 3.2 2 4.7-13 .4-35.1 2.1-56.3 8.1l.3.9c21.4-6 43.7-7.6 56.6-8 7.8 14.4 23 23.8 50.2 26.7-3.9 2.6-7.8 7-9.4 14.5-5.3 2.5-21.9 8.7-31.9-8.5 0 0-5.6-10.2-16.3-11 0 0-10.4-.2-.7 6.5 0 0 6.9 3.3 11.7 15.6 0 0 6.3 21 36.4 14.2V177s-.6 7.7-7.7 10.2c0 0-4.2 2.9.3 4.5 0 0 19.5 1.6 19.5-14.4v-23.6s-.8-9.4 3.8-12.6v38.8s-.3 9.3-5.1 12.8c0 0-3.2 5.7 3.8 4.2 0 0 13.4-1.9 14-17.6l.3-39.3h3.2l.3 39.3c.6 15.6 14 17.6 14 17.6 7 1.6 3.8-4.2 3.8-4.2-4.8-3.5-5.1-12.8-5.1-12.8v-38.5c4.6 3.6 3.8 12.3 3.8 12.3v23.6c0 16 19.5 14.4 19.5 14.4 4.5-1.6.3-4.5.3-4.5-7-2.6-7.7-10.2-7.7-10.2v-31c0-12.1-5.1-18.5-10.1-21.8 29-2.9 42.9-12.2 49.3-26.8 12.7.3 35.6 1.9 57.4 8.1l.3-.9c-21.7-6.1-44.4-7.7-57.3-8.1.6-1.5 1.1-3 1.6-4.6 13.4-.5 35.1-.5 56.3 3.7z"
+          />
+
+          <!-- Body silhouette — fill-only pass (restores the dark core the
+             keyline ate, so whiskers stay visible on light + tentacles
+             render thick). -->
+          <path
+            fill="#24292f"
+            d="M255.8 95.6l.2-.9c-21.1-4.2-42.7-4.3-55.8-3.7 2.1-7.7 2.8-16.7 2.8-26.6 0-14.3-5.4-25.7-14-34.3 1.5-4.9 3.5-15.8-2-29.7 0 0-9.8-3.1-32.1 11.8-8.7-2.2-18-3.3-27.3-3.3-10.2 0-20.5 1.3-30.2 3.9C74.4-2.9 64.3.3 64.3.3c-6.6 16.5-2.5 28.8-1.3 31.8-7.8 8.4-12.5 19.1-12.5 32.2 0 9.9 1.1 18.8 3.9 26.5-13.2-.5-34-.3-54.4 3.8l.2.9c20.4-4.1 41.4-4.2 54.5-3.7.6 1.6 1.3 3.2 2 4.7-13 .4-35.1 2.1-56.3 8.1l.3.9c21.4-6 43.7-7.6 56.6-8 7.8 14.4 23 23.8 50.2 26.7-3.9 2.6-7.8 7-9.4 14.5-5.3 2.5-21.9 8.7-31.9-8.5 0 0-5.6-10.2-16.3-11 0 0-10.4-.2-.7 6.5 0 0 6.9 3.3 11.7 15.6 0 0 6.3 21 36.4 14.2V177s-.6 7.7-7.7 10.2c0 0-4.2 2.9.3 4.5 0 0 19.5 1.6 19.5-14.4v-23.6s-.8-9.4 3.8-12.6v38.8s-.3 9.3-5.1 12.8c0 0-3.2 5.7 3.8 4.2 0 0 13.4-1.9 14-17.6l.3-39.3h3.2l.3 39.3c.6 15.6 14 17.6 14 17.6 7 1.6 3.8-4.2 3.8-4.2-4.8-3.5-5.1-12.8-5.1-12.8v-38.5c4.6 3.6 3.8 12.3 3.8 12.3v23.6c0 16 19.5 14.4 19.5 14.4 4.5-1.6.3-4.5.3-4.5-7-2.6-7.7-10.2-7.7-10.2v-31c0-12.1-5.1-18.5-10.1-21.8 29-2.9 42.9-12.2 49.3-26.8 12.7.3 35.6 1.9 57.4 8.1l.3-.9c-21.7-6.1-44.4-7.7-57.3-8.1.6-1.5 1.1-3 1.6-4.6 13.4-.5 35.1-.5 56.3 3.7z"
+          />
+
+          <!-- Face: large rounded negative space -->
+          <path
+            fill="#f0f6fc"
+            d="M174.6 63.7c6.2 5.7 9.9 12.5 9.9 19.8 0 34.4-25.6 35.3-57.2 35.3S70.1 114 70.1 83.5c0-7.3 3.6-14.1 9.8-19.7 10.3-9.4 27.7-4.4 47.4-4.4s37-5.1 47.3 4.3z"
+          />
+
+          <!-- Left pupil — blinks (collapses to the white face behind) -->
+          <path
+            class="blink"
+            fill="#24292f"
+            d="M104.5 85.5c0 6.3-3.6 11.4-7.9 11.4-4.4 0-7.9-5.1-7.9-11.4 0-6.3 3.6-11.4 7.9-11.4 4.3 0 7.9 5.1 7.9 11.4z"
+          />
+
+          <!-- Right pupil — blinks (collapses to the white face behind) -->
+          <path
+            class="blink"
+            fill="#24292f"
+            d="M168.3 85.5c0 6.3-3.6 11.4-7.9 11.4-4.4 0-7.9-5.1-7.9-11.4 0-6.3 3.6-11.4 7.9-11.4 4.4 0 7.9 5.1 7.9 11.4z"
+          />
+
+          <!-- Nose + mouth — static (recoloured to ink) -->
+          <path
+            fill="#24292f"
+            d="M130.5 100.5c0 1.6-1.3 3-3 3-1.6 0-3-1.3-3-3s1.3-3 3-3c1.6 0 3 1.3 3 3zm-9.9 7.5c-.2-.5.1-1 .6-1.2.5-.2 1 .1 1.2.6.8 2.2 2.8 3.6 5.1 3.6s4.3-1.5 5.1-3.6c.2-.5.7-.8 1.2-.6.5.2.8.7.6 1.2-1 2.9-3.8 4.9-6.9 4.9-3.1 0-5.9-2-6.9-4.9z"
+          />
+
+          <!-- Tentacle suckers — the row of small ovals running along the
+             curled left arm, kept from the original Octocat (recoloured
+             from teal to off-white). Drawn on top of the dark arm fill. -->
+          <path
+            fill="#f0f6fc"
+            d="M54.5 121.6c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2 0 2.1.6 2.1 1.4zm5.8 3.2c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2 0 2.1.6 2.1 1.4zm3.5 4.2c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2-.1 2.1.6 2.1 1.4zm3.2 4.8c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2-.1 2.1.6 2.1 1.4zm3.5 4.4c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2 0 2.1.6 2.1 1.4zm4.8 3.9c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2-.1 2.1.6 2.1 1.4zm6.7 2.5c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2 0 2.1.6 2.1 1.4zm6.7 0c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.2 0 2.1.6 2.1 1.4zm6.8-1.1c0 .8-.9 1.4-2.1 1.4-1.1 0-2.1-.6-2.1-1.4 0-.8.9-1.4 2.1-1.4 1.1 0 2.1.6 2.1 1.4z"
+          />
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       Side panel — dark ink fill + white border (inverted palette).
+       Drawn over the cat so it hides behind. Stays static while the
+       cat tilts, so the cat appears to peek out from behind it.
+       ============================================================ -->
+  <rect x="72" y="17" width="42" height="94" rx="9" fill="#24292f" stroke="#f0f6fc" stroke-width="3" />
+
+  <!-- PR diff — 7 rows. Every line shares the SAME dur (7s) so the whole
+       panel falls idle together: a short burst of edits, then a long frozen
+       pause, repeating. Per-line delay + min/max amplitude vary the burst so
+       the lines still look independent (staggered, different widths) without
+       breaking the shared idle. Two green-plus rows (4 & 7) are sign-cyclers:
+       bar + gutter dash + stem churn green-plus to red-minus to grey, then hold. -->
+  <g stroke-linecap="round">
+    <!-- context -->
+    <rect class="diff-line" style="--dur: 9s; --delay: 0s;    --min: 0.55; --max: 1;" x="87" y="25.5" width="16" height="5" rx="2.5" fill="#768390" />
+
+    <!-- removed (red −) -->
+    <rect x="78" y="38.75" width="6" height="2.5" rx="1.25" fill="#f85149" />
+    <rect
+      class="diff-line"
+      style="--dur: 9s; --delay: 0.4s;  --min: 0.6;  --max: 0.95;"
+      x="87"
+      y="37.5"
+      width="14"
+      height="5"
+      rx="2.5"
+      fill="#f85149"
+    />
+
+    <!-- added (green +) -->
+    <rect x="78" y="50.75" width="6" height="2.5" rx="1.25" fill="#3fb950" />
+    <rect x="79.75" y="49" width="2.5" height="6" rx="1.25" fill="#3fb950" />
+    <rect class="diff-line" style="--dur: 9s; --delay: 0.2s;  --min: 0.5;  --max: 1;" x="87" y="49.5" width="19" height="5" rx="2.5" fill="#3fb950" />
+
+    <!-- sign-cycler: green + ↔ red − ↔ grey context -->
+    <g style="--dur: 9s; --delay: 0.1s;">
+      <rect class="sign-dash" x="78" y="62.75" width="6" height="2.5" rx="1.25" fill="#3fb950" />
+      <rect class="sign-stem" x="79.75" y="61" width="2.5" height="6" rx="1.25" fill="#3fb950" />
+      <rect class="sign diff-line" style="--min: 0.55; --max: 1;" x="87" y="61.5" width="13" height="5" rx="2.5" fill="#3fb950" />
+    </g>
+
+    <!-- context -->
+    <rect
+      class="diff-line"
+      style="--dur: 9s; --delay: 0.7s;  --min: 0.62; --max: 0.96;"
+      x="87"
+      y="73.5"
+      width="15"
+      height="5"
+      rx="2.5"
+      fill="#768390"
+    />
+
+    <!-- removed (red −) -->
+    <rect x="78" y="86.75" width="6" height="2.5" rx="1.25" fill="#f85149" />
+    <rect
+      class="diff-line"
+      style="--dur: 9s; --delay: 0.15s; --min: 0.5;  --max: 0.92;"
+      x="87"
+      y="85.5"
+      width="16"
+      height="5"
+      rx="2.5"
+      fill="#f85149"
+    />
+
+    <!-- sign-cycler: green + ↔ red − ↔ grey context -->
+    <g style="--dur: 9s; --delay: 0.55s;">
+      <rect class="sign-dash" x="78" y="98.75" width="6" height="2.5" rx="1.25" fill="#3fb950" />
+      <rect class="sign-stem" x="79.75" y="97" width="2.5" height="6" rx="1.25" fill="#3fb950" />
+      <rect class="sign diff-line" style="--min: 0.5; --max: 0.95;" x="87" y="97.5" width="12" height="5" rx="2.5" fill="#3fb950" />
+    </g>
+  </g>
+</svg>

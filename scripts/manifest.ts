@@ -15,13 +15,20 @@ function getExtensionPages(_dev: boolean, _port: number) {
 }
 
 function getHostPermissions(_dev: boolean, _port: number) {
-  const permissions: Manifest.Permission[] = [];
+  const permissions: Manifest.Permission[] = [
+    // GitHub OAuth endpoints (login/oauth/*, login/device/*) lack CORS headers, so the
+    // background worker needs host access to call them. The REST API is reached via Octokit.
+    'https://github.com/*',
+    'https://api.github.com/*',
+  ];
   if (_dev) permissions.push(`${Endpoints.Dev}:${_port}/*`);
   return permissions;
 }
 
 export type WebManifest = Manifest.WebExtensionManifest & {
   side_panel: Record<string, string>;
+  /** Chromium-only: pins the extension id so the OAuth redirect URL stays stable. */
+  key?: string;
 };
 
 export const manifest: WebManifest = {
@@ -69,7 +76,13 @@ export const manifest: WebManifest = {
       run_at: 'document_idle',
     },
   ],
-  permissions: ['storage', 'tabs', 'contextMenus', 'sidePanel'],
+  // `identity` powers chrome.identity.launchWebAuthFlow (GitHub web OAuth flow).
+  permissions: ['storage', 'tabs', 'contextMenus', 'sidePanel', 'identity'],
+  // A stable `key` pins the extension id (and thus the https://<id>.chromiumapp.org/
+  // OAuth redirect) across reloads. Generate one and register the redirect on the
+  // OAuth App, e.g.: `openssl genrsa 2048 | openssl rsa -pubout -outform DER | base64 -w0`.
+  // Set it via the MANIFEST_KEY env var so the public key never lands in git.
+  ...(process.env.MANIFEST_KEY ? { key: process.env.MANIFEST_KEY } : {}),
   web_accessible_resources: [],
   host_permissions: getHostPermissions(isDev, port),
   content_security_policy: {

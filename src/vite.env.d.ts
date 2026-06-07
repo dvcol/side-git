@@ -15,6 +15,13 @@ interface ImportMetaEnv extends ImportMetaEnv {
   VITE_WEB?: boolean;
   VITE_SOURCEMAP?: boolean;
   VITE_ZIP?: boolean;
+
+  /** GitHub OAuth App client id (web + device flow). */
+  VITE_GITHUB_CLIENT_ID?: string;
+  /** GitHub OAuth App client secret (web flow only). */
+  VITE_GITHUB_CLIENT_SECRET?: string;
+  /** Space-separated OAuth scopes, e.g. `read:user repo`. */
+  VITE_GITHUB_SCOPE?: string;
 }
 
 interface ImportMeta {

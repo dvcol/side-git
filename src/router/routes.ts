@@ -1,6 +1,7 @@
 import type { Route, RouterOptions } from '@dvcol/svelte-simple-router/models';
 
 export const RouteName = {
+  PullRequests: 'pull-requests',
   Hello: 'hello',
   Goodbye: 'goodbye',
   Home: 'home',
@@ -14,8 +15,13 @@ export const routes: Readonly<Route<RouteNames>[]> = [
     name: RouteName.Home,
     path: '/',
     redirect: {
-      name: RouteName.Hello,
+      name: RouteName.PullRequests,
     },
+  },
+  {
+    name: RouteName.PullRequests,
+    path: `/${RouteName.PullRequests}`,
+    component: async () => import('~/components/views/PullRequestsComponent.svelte'),
   },
   {
     name: RouteName.Hello,
@@ -31,7 +37,7 @@ export const routes: Readonly<Route<RouteNames>[]> = [
     name: RouteName.Any,
     path: '*',
     redirect: {
-      name: RouteName.Hello,
+      name: RouteName.PullRequests,
     },
   },
 ] as const;

@@ -2,7 +2,7 @@
   import { RouterView } from '@dvcol/svelte-simple-router/components';
   import { transition } from '@dvcol/svelte-simple-router/utils';
 
-  import logo from '~/assets/logo.svg';
+  import logo from '~/assets/logo-animated.svg';
   import { router } from '~/router/router';
   import { useI18n } from '~/utils/i18n.utils';
 

@@ -2,10 +2,15 @@ import { onVersionUpdate } from '@dvcol/web-extension-utils/chrome/runtime';
 import { setPanelBehavior } from '@dvcol/web-extension-utils/chrome/side-panel';
 
 import { MessageType } from '~/models/message.model';
+import { registerGithubOAuthProxy } from '~/services/auth/github-oauth.proxy';
 import { Logger } from '~/services/logger.service';
 import { storage } from '~/utils/browser/browser-storage.utils';
 
 Logger.debug('Background script started');
+
+// Proxy GitHub OAuth POSTs (token exchange / device code / poll) — these endpoints
+// lack CORS headers and must be called from a context with host permissions.
+registerGithubOAuthProxy();
 
 try {
   onVersionUpdate(async (details) => {

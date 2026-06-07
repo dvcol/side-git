@@ -4,6 +4,7 @@ import { LoggerColor } from '@dvcol/common-utils/common/logger';
 
 import { MessageType } from '~/models/message.model';
 import { Logger } from '~/services/logger.service';
+import { GithubAuthStore } from '~/stores/github-auth.store.svelte';
 import { storage } from '~/utils/browser/browser-storage.utils';
 import { waitI18nReady } from '~/utils/i18n.utils';
 
@@ -18,6 +19,9 @@ async function onVersionUpdate(storageKey = MessageType.VersionUpdate) {
 
 export async function initServices(options: { option?: boolean; popup?: boolean; panel?: boolean; web?: boolean } = {}) {
   await waitI18nReady();
+
+  // Restore a previously authenticated GitHub session (non-blocking on failure).
+  await GithubAuthStore.hydrate().catch(Logger.error);
 
   Logger.info(...Logger.colorize(LoggerColor.Success, Logger.timestamp, 'All services initialized!'), options);
 
