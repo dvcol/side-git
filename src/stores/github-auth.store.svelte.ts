@@ -18,7 +18,7 @@ let storeHydrated = false;
  * Reactive GitHub auth session, mirroring the {@link I18nStore} runes-store pattern.
  *
  * The token is persisted to `storage.local` (never synced) so a returning user stays
- * logged in. Both OAuth strategies write the resulting session here via {@link setSession}.
+ * logged in. Every authentication strategy writes its resulting session here via {@link setSession}.
  */
 export class GithubAuthStore {
   static get token() {

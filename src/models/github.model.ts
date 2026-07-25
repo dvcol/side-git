@@ -1,9 +1,11 @@
-/** Which OAuth flow produced the current session. */
+/** Which authentication method produced the current session. */
 export const GithubAuthStrategy = {
   /** chrome.identity.launchWebAuthFlow + PKCE (default). */
   Web: 'web',
   /** OAuth device flow (no client secret, code-paste fallback). */
   Device: 'device',
+  /** User-provided personal access token. */
+  Pat: 'pat',
 } as const;
 
 export type GithubAuthStrategies = (typeof GithubAuthStrategy)[keyof typeof GithubAuthStrategy];

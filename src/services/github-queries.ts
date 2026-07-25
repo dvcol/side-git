@@ -33,12 +33,14 @@ export function loginMutationOptions(): CreateMutationOptions<GithubSession, Err
   return {
     mutationKey: [...GITHUB_QUERY_KEY, 'login'],
     mutationFn: async options => GithubAuthService.login(options ?? undefined),
-    onSuccess: async () => {
+    onSuccess: async (session) => {
       // Fetch + persist the viewer so the header shows the user immediately.
-      try {
-        await GithubAuthStore.setUser(await GithubApiService.getViewer());
-      } catch (err) {
-        Logger.warn('Failed to fetch viewer after login', err);
+      if (!session.user) {
+        try {
+          await GithubAuthStore.setUser(await GithubApiService.getViewer());
+        } catch (err) {
+          Logger.warn('Failed to fetch viewer after login', err);
+        }
       }
       await queryClient.invalidateQueries({ queryKey: GITHUB_QUERY_KEY });
     },
